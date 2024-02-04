@@ -1,0 +1,27 @@
+version: '3.0'
+services:
+  db:
+    image: mysql:8.0
+    platform: linux/x86_64  # M1 Macの場合必要
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: 'demo'
+      TZ: 'Asia/Tokyo'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password 
+    ports:
+      - 3306:3306  # ホスト
+  api:
+    container_name: "demo_api"
+    volumes:
+      - .:/app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      TZ: 'Asia/Tokyo'
+    ports:
+      - 8080:8080
+volumes:
+  mysql_data:
